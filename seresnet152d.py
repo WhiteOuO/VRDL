@@ -13,11 +13,11 @@ from torch.utils.data import DataLoader
 from PIL import Image
 from torchvision import datasets
 import random
-# ✅ Avoid garbled output
+#  Avoid garbled output
 sys.stdout.reconfigure(encoding='utf-8')
-cudnn.benchmark = True  # ✅ cuDNN acceleration
+cudnn.benchmark = True  #  cuDNN acceleration
 
-# ✅ Set device (GPU or CPU)
+#  Set device (GPU or CPU)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def mixup_data(x, y, alpha=0.5):
@@ -38,7 +38,7 @@ def mixup_criterion(criterion, pred, y_a, y_b, lam):
     '''Calculates the mixup loss using the weighted labels'''
     return lam * criterion(pred, y_a) + (1 - lam) * criterion(pred, y_b)
 
-# ✅ Custom ImageFolder to ensure RGB format
+#  Custom ImageFolder to ensure RGB format
 class RGBImageFolder(datasets.ImageFolder):
     def __getitem__(self, index):
         path, target = self.samples[index]
@@ -47,13 +47,13 @@ class RGBImageFolder(datasets.ImageFolder):
             image = self.transform(image)
         return image, target
 
-# ✅ Set hyperparameters
+#  Set hyperparameters
 num_epochs = 60
-max_lr = 0.0000324
-patience = 12  # ✅ Early Stopping patience value
+max_lr = 0.00015
+patience = 10 #  Early Stopping patience value
 verbose = True
 
-# ✅ Train function
+#  Train function
 def train(model, train_loader, criterion, optimizer, device, scaler):
     model.train()
     running_loss = 0.0
@@ -100,7 +100,7 @@ def train(model, train_loader, criterion, optimizer, device, scaler):
     accuracy = 100 * correct / total
     return running_loss / len(train_loader), accuracy
 
-# ✅ Evaluation function
+#  Evaluation function
 def evaluate(model, val_loader, criterion, device):
     model.eval()
     val_loss = 0.0
@@ -137,7 +137,7 @@ def plot_confusion_matrix(cm, classes, save_path):
 if __name__ == '__main__':
     mp.set_start_method('spawn', force=True)
 
-    # ✅ Data Augmentation
+    #  Data Augmentation
     train_transform = transforms.Compose([  # Data augmentation
         transforms.RandomResizedCrop(400, scale=(0.5, 1.0)),  # Increase range of scaling
         transforms.Resize((256, 256)),
@@ -166,31 +166,25 @@ if __name__ == '__main__':
 
     num_classes = len(train_dataset.classes)
 
-    # ✅ Load pretrained model from timm library
+    #  Load pretrained model from timm library
     model = timm.create_model('seresnet152d.ra2_in1k', pretrained=True)
     num_ftrs = model.fc.in_features
     model.fc = nn.Sequential(
         nn.Dropout(0.4),
         nn.Linear(num_ftrs, num_classes)
     )
-    state_dict = torch.load("best_resnet_model_epoch_21.pth", map_location=device, weights_only=True)  # ✅ 避免 `pickle` 警告
-    missing_keys, unexpected_keys = model.load_state_dict(state_dict, strict=False)
-    # ✅ 檢查是否有權重不匹配
-    if missing_keys:
-        print(f" 缺少的權重鍵: {missing_keys}")
-    if unexpected_keys:
-        print(f" 多餘的權重鍵: {unexpected_keys}")
-
-    print(" 模型權重載入成功！")
+    """ for continue training
+    state_dict = torch.load("best_resnet_model_epoch_21.pth", map_location=device, weights_only=True) 
+    """
     model = model.to(device)
 
-    # ✅ Set loss function and optimizer
+    #  Set loss function and optimizer
     criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
     optimizer = optim.AdamW(model.parameters(), lr=max_lr, weight_decay=1e-2)
 
     scaler = torch.amp.GradScaler()
     
-    best_val_acc = 0.0
+    best_val_loss = 0.0
     best_model_state = None
     bestcm = None
     
@@ -205,8 +199,8 @@ if __name__ == '__main__':
         print(f"Epoch {epoch+1}/{num_epochs} | Train Acc: {train_acc:.2f}% | Val Acc: {val_acc:.2f}% | Val Loss: {val_loss:.5f}")
 
         # Save best model weights
-        if val_acc > best_val_acc:
-            best_val_acc = val_acc
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
             best_model_state = model.state_dict()  # Save only the weights
             torch.save(best_model_state, f"best_resnet_model_epoch_{epoch+1}.pth")
             bestcm = confusion_matrix(all_labels, all_preds)
