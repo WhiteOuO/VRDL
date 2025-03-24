@@ -222,7 +222,7 @@ if __name__ == '__main__':
     # After training, save the best model
     if best_model_state:
         torch.save(best_model_state, "best_resnet_model.pth")
-        print(f"\n  Best model weights saved! Validation Acc: {best_val_acc:.2f}%")
+        print(f"\n  Best model weights saved! Validation Acc: {best_val_loss:.2f}%")
 
         # Generate and plot confusion matrix after training
     save_path = "confusion_matrix.png"  # Save confusion matrix as a PNG file
