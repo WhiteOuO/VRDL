@@ -22,7 +22,7 @@ transform = transforms.Compose([
     transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
 ])
 test_transform = transforms.Compose([
-    transforms.Resize((320, 320)),  # Resize test images to 288x288
+    transforms.Resize((320, 320)), # different pic size for different here
     transforms.ToTensor(),
     transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
 ])
