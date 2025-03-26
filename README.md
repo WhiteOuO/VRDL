@@ -8,4 +8,5 @@ Furthermore, I will also apply a learning rate adjustment strategy, some model l
 ## How to install
 pip install -r requirements.txt  
 ## Performance snapshot
-![image](https://github.com/user-attachments/assets/65d7e8db-25e2-4677-a3cc-5d9a2c880974)
+![image](https://github.com/user-attachments/assets/65d7e8db-25e2-4677-a3cc-5d9a2c880974)  
+![image](https://github.com/user-attachments/assets/1ef716db-2a2a-43d1-83d0-0853376d5464)
