@@ -10,10 +10,9 @@ from PIL import Image
 import torch.nn as nn
 import sys
 # Model parameters
-
 sys.stdout.reconfigure(encoding='utf-8')
 num_classes = 100  # Number of classes
-model_path = "best_resnet_model.pth"  # change to your model name here
+model_path = "best_resnet_model_epoch_29.pth"  # Path to saved model
 
 # Data transformations
 transform = transforms.Compose([
@@ -21,8 +20,9 @@ transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
 ])
+# Modify the test transform to resize the images to 288x288
 test_transform = transforms.Compose([
-    transforms.Resize((320, 320)), # different pic size for different here
+    transforms.Resize((320, 320)),  # Resize test images to 288x288
     transforms.ToTensor(),
     transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
 ])
@@ -51,21 +51,15 @@ test_loader = DataLoader(dataset=test_dataset, batch_size=32, shuffle=False)
 # Initialize model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
-#  Load pretrained SEResNeXt-50 from timm library
 # model = timm.create_model('resnetaa50d.sw_in12k_ft_in1k', pretrained=True)
 # model = timm.create_model('resnetaa101d.sw_in12k_ft_in1k', pretrained=True)
 model = timm.create_model('seresnet152d.ra2_in1k', pretrained=True)
 num_ftrs = model.fc.in_features
-
 model.fc = nn.Sequential(
-    nn.Dropout(0.4),
+    nn.Dropout(0.5),
     nn.Linear(num_ftrs, num_classes)
 )
-
 state_dict = torch.load(model_path, map_location=device, weights_only=True)
-missing_keys, unexpected_keys = model.load_state_dict(state_dict, strict=False)
-
 model = model.to(device)
 model.eval()
 

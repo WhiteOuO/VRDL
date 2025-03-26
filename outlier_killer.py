@@ -49,8 +49,8 @@ def build_autoencoder():
     return autoencoder
 
 # Set train and val folders
-train_root = "data_temp/train"
-val_root = "data_temp/val"
+train_root = "data/train"
+val_root = "data/val"
 
 # Automatically get all category names in `train/`
 for class_name in os.listdir(train_root):
