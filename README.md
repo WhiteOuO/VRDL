@@ -1,5 +1,5 @@
 # NYCU Computer Vision 2025 Spring HW1
-StudentID:110550128
+StudentID:110550128  
 Name:蔡耀霆
 ## Introduction:
 I have chosen to use pretrained weights for image recognition, which will give me a good starting point, and then let the model gradually adapt to my dataset and learn. I plan to implement some data augmentation so that each image in my training set can be transformed through different image processing techniques to provide more comprehensive features for that class, such as horizontal flipping, slight changes in brightness and hue, and cropping the image.
