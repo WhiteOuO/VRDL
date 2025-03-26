@@ -6,6 +6,6 @@ I have chosen to use pretrained weights for image recognition, which will give m
 In addition to image processing techniques, I also plan to use methods to exclude outliers from the training data. I believe this will help the model better learn the common features of the class from the normal data.
 Furthermore, I will also apply a learning rate adjustment strategy, some model layer addition and some techniques to help my model progress more effectively.
 ## How to install
-
+pip install -r requirements.txt  
 ## Performance snapshot
 ![image](https://github.com/user-attachments/assets/65d7e8db-25e2-4677-a3cc-5d9a2c880974)
