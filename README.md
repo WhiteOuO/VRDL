@@ -1,4 +1,4 @@
-# NYCU Computer Vision 2025 Spring HW1
+# NYCU VRDL HW1
 StudentID:110550128  
 Name:蔡耀霆
 ## Introduction:
